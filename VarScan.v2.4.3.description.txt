@@ -1,9 +1,8 @@
-RELEASE NOTES FOR VARSCAN V2.4.2
+RELEASE NOTES FOR VARSCAN V2.4.3
 
-26-May-2016
+01-Dec-2016
 
-VarScan v2.4.2 is the current release
-VarScan v2.4.1 is the previous release
+VarScan v2.4.3 is the current release
 VarScan v2.4.0 was the first release to VarScan's new home at GitHub, http://dkoboldt.github.io/varscan/
 VarScan v2.3.9 and prior releases will persist on SourceForge, as will the support forums and other resources. 
 
@@ -17,19 +16,27 @@ paulcarter@wustl.edu
 +1 314-362-5426
 https://otm.wustl.edu/for-industry/tools/
 
-VERSION 2.4.2 CHANGES
-The primary changes are minor bugfixes for user-reported issues:
+VERSION 2.4.3 CHANGES
+The principal change to this version changes how normal read counts are compiled during somatic mutation calling. 
 
-1.) Better handling of mal-formed mpileup lines in VarScan copynumber
+The remaining changes are minor bugfixes for user-reported issues:
 
-2.) Addressing missing segregation STATUS codes in VarScan trio and the addition of a new code (0) for "Unknown")
+1.) Some warnings printed by default to STDOUT (such as "Resetting normal file") are now only reported if --verbose 1 is set.
 
-3.) Addressing a VCF format issue for somatic mutation calling, in which multi-allelic sites (classified as "UNKNOWN") were reported
-in non-standard VCF format (with forward slashes in the ALT column). VarScan 2 somatic should now report multiple variant alleles
-using the ALT1,ALT2 format and the genotype fields for normal and tumor samples should reflect the appropriate variant allele.
+2.) Added a --min-mmqs-diff parameter to fpfilter, so that users can remove false positives with low/negative MMQSdiff values.
+
+3.) Corrected some archaic code that represented indels like INS-3-ACG in VarScan native output. Native output uses more common
+formats (+ACG) to represent the variant allele. 
+
+4.) Fixed the parsing exception errors in VarScan copynumber due to 8-column mpileup files (a correct line has 9 columns).
+
+5.) Added a new option, --max-basequal-diff, to the fpfilter command (default value: 50).
 
 
-REMINDER: PLEASE USE THE FALSE POSITIVE FILTER
+REMINDER: PLEASE USE THE FALSE POSITIVE FILTER (fpfilter)
+We recommend processing initial VarScan output with processSomatic, and then applying fpfilter to high-confidence Somatic calls.
+Although the "somaticFilter" function will continue to be available, we recommend using the above approach instead.
+
 The scientific basis of this filter is described in the VarScan 2 publication. It will improve
 the precision of variant and mutation calling by removing artifacts associated with short-read alignment.
 -For somatic mutations, generate bam-readcounts with the Tumor BAM. For LOH and Germline, generate readcounts with the Normal BAM
